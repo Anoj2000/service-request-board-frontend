@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Service Request Board - Frontend
 
-## Getting Started
+Frontend application for the Service Request Board built with Next.js 14 and Tailwind CSS.
 
-First, run the development server:
+## 🚀 Tech Stack
 
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS
+- **Language:** JavaScript/React
+
+## ✨ Features
+
+- ✅ Browse service requests
+- ✅ Filter jobs by category
+- ✅ Create new service requests
+- ✅ View detailed job information
+- ✅ Update job status (Open/In Progress/Closed)
+- ✅ Delete jobs
+- ✅ Client-side form validation
+- ✅ Responsive design
+
+## 🛠️ Setup Instructions
+
+### Prerequisites
+- Node.js v18 or higher
+- Backend API running (see [backend repo](https://github.com/YOUR_USERNAME/service-request-board-backend))
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/YOUR_USERNAME/service-request-board-frontend.git
+cd service-request-board-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Create `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+For production, use your Railway backend URL:
+```env
+NEXT_PUBLIC_API_URL=https://your-backend.railway.app/api
+```
 
-## Learn More
+4. Start the development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Project Structure
+frontend/
+├── app/
+│   ├── jobs/
+│   │   ├── [id]/
+│   │   │   └── page.jsx      # Job detail page
+│   │   └── new/
+│   │       └── page.jsx       # Create job form
+│   ├── page.jsx               # Home page (job list)
+│   └── layout.jsx             # Root layout
+├── public/
+├── .env.local                 # Environment variables (not in git)
+├── .gitignore
+├── next.config.js
+├── tailwind.config.js
+└── package.json
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌐 Deployment
 
-## Deploy on Vercel
+Deployed on Vercel: [Your Vercel URL]
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Required environment variables:
+
+- `NEXT_PUBLIC_API_URL` - Backend API URL
+
+## 🔗 Related Repositories
+
+- **Backend API:** [service-request-board-backend](https://github.com/YOUR_USERNAME/service-request-board-backend)
+
+## 👨‍💻 Author
+
+[Your Name]
+
+## 📅 Submission Date
+
+May 18, 2026 - GlobalTNA Full-Stack Developer Intern Assessment
