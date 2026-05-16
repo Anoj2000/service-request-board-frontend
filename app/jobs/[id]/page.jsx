@@ -1,16 +1,18 @@
 'use client';
-import { use, useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function JobDetail({ params }) {
-  const { id } = use(params);
   const router = useRouter();
+  const { user } = useAuth();
+  const { id } = use(params); // ✅ Unwrap params Promise with React.use()
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchJob();
-  }, []);
+  }, [id]);
 
   const fetchJob = async () => {
     try {
@@ -31,19 +33,40 @@ export default function JobDetail({ params }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
-      if (response.ok) fetchJob();
+
+      if (response.ok) {
+        fetchJob();
+      }
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
   const deleteJob = async () => {
+    if (!user) {
+      alert('You must be logged in to delete jobs');
+      router.push('/login');
+      return;
+    }
+
     if (!confirm('Are you sure you want to delete this job?')) return;
+
     try {
+      const token = localStorage.getItem('token');
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
-      if (response.ok) router.push('/');
+
+      if (response.ok) {
+        router.push('/');
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Error deleting job');
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -71,6 +94,7 @@ export default function JobDetail({ params }) {
             <h2 className="font-bold text-gray-900 mb-2">Description</h2>
             <p className="text-gray-700">{job.description}</p>
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
               <h2 className="font-bold text-gray-900 mb-2">Category</h2>
@@ -81,6 +105,7 @@ export default function JobDetail({ params }) {
               <p className="text-gray-700">📍 {job.location}</p>
             </div>
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-green-50 p-4 rounded-lg">
               <h2 className="font-bold text-gray-900 mb-2">Contact Name</h2>
@@ -91,6 +116,7 @@ export default function JobDetail({ params }) {
               <p className="text-gray-700">✉️ {job.contactEmail}</p>
             </div>
           </div>
+
           <div className="bg-indigo-50 p-4 rounded-lg">
             <h2 className="font-bold text-gray-900 mb-2">Posted</h2>
             <p className="text-gray-700">🗓️ {new Date(job.createdAt).toLocaleDateString()}</p>
@@ -110,12 +136,24 @@ export default function JobDetail({ params }) {
               <option>Closed</option>
             </select>
           </div>
-          <button
-            onClick={deleteJob}
-            className="bg-red-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-700 transition-colors shadow-md"
-          >
-            Delete Job
-          </button>
+
+          {user ? (
+            <button
+              onClick={deleteJob}
+              className="bg-red-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-red-700 transition-colors shadow-md"
+            >
+              Delete Job
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push('/login')}
+              className="bg-gray-400 text-white font-semibold px-6 py-2 rounded-lg cursor-not-allowed"
+              title="Login required to delete"
+            >
+              Login to Delete
+            </button>
+          )}
+
           <button
             onClick={() => router.push('/')}
             className="bg-gray-200 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
